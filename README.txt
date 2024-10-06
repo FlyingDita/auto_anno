@@ -1,14 +1,7 @@
-想要实现的功能： 一个好用的标注工具
+A simple, useful, offline annotation tool.
 
+Functions:
+1. (x1,y1,x2,y2), Class_id
+2. Normalization
 
-To do list:
-1. 利用github进行代码更新和同步 √
-2. 实现基本的功能 √
-3. 能够选择不同颜色的标注框并在保存文件中体现-->代表不同的类别
-4. 标注结果归一化
-5. 添加外部的功能选项
-
-
-
-Additional：
-大模型进行预标注
+If any questions, could contact by mian_cug@163.com

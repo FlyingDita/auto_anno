@@ -8,16 +8,25 @@ import sys
 # 全局变量
 drawing = False  # 鼠标按下标志
 ix, iy = -1, -1  # 起始坐标
-rectangles = []  # 存储矩形坐标
+bbox = []  # 
 origin_folder_paths = []
 output_folder_paths = []
 color = [0,255,0]
 class_id = 0
 
+
+def get_class(color):
+    if color == [255,0,0]:
+        return 1
+    elif color == [0,0,255]:
+        return 2
+    else:
+        return 0
+
+
 # 获取鼠标标注结果
 def draw_rectangle(event, x, y, flags, param):
-    global ix, iy, drawing, rectangles, color
-
+    global ix, iy, drawing, bbox, color
 
     # print(color)
 
@@ -34,7 +43,8 @@ def draw_rectangle(event, x, y, flags, param):
     elif event == cv2.EVENT_LBUTTONUP:  # 鼠标左键抬起
         drawing = False
         cv2.rectangle(img, (ix, iy), (x, y), color, 1)
-        rectangles.append((ix, iy, x, y))  # 保存矩形坐标
+        number = get_class(color)
+        bbox.append((number, ix, iy, x, y))  # (class , rectangle)
 
 # # 设置键盘事件
 # def on_key_press(event):
@@ -84,7 +94,7 @@ def function3():
             global origin_folder_paths
             print(origin_folder_paths)
             if (origin_folder_paths!=[]) and (output_folder_paths!=[]):
-                global img, rectangles, color
+                global img, bbox, color
                 file_paths = []
                 for root, dirs, files in os.walk(origin_folder_paths):
                     for file in files:
@@ -95,6 +105,7 @@ def function3():
 
                 # print(file_paths)
                 for index,img_path in enumerate(file_paths):
+                    bbox = []
                     img_name = img_path.split("\\")[1]
                     # print(img_name)
                     save_img_path = output_folder_paths + '/' + img_name
@@ -111,7 +122,7 @@ def function3():
                         if key == ord('d'):  
                             # print("yesyes")
                             with open(txt_path, 'w') as f:
-                                for rect in rectangles:
+                                for rect in bbox:
                                     f.write(f"{rect}\n")
                             print(f"Annotations saved to {txt_path}")
                             cv2.imwrite(save_img_path,img)
@@ -122,9 +133,10 @@ def function3():
                         finnal_img = cv2.imread('finnal.png')
                         cv2.imshow('Image',finnal_img)
                         cv2.waitKey(0)
+                break      
             else:
                 print("origin and output folder select is essential !!! ")
-
+        print("\nout")
     except KeyboardInterrupt:
         print("Thread interrupted!")
     finally:
